@@ -16,29 +16,35 @@
 	# puts parsed["people"][0]["person"]["firstname"]
 
 $:.unshift (File.dirname(__FILE__))
-require_relative "lib/pol_name"
+require_relative "lib/district"
 require_relative "lib/senator"
 
 require 'rest-client'
 require 'json'
 require 'pry'
 
-puts "***Hello and welcome to 'Find your Senators'***"
-puts "Please choose how you'd like to search:"
-puts "a. By state to get its Senators or"
-puts "b. By a Senator's name to see the state (s)he represents."
-
+puts "***Hello and welcome to 'Find your Congresspeople'***"
+puts "Please choose which you'd like to search:"
+puts "a. Senators or"
+puts "b. Representatives"
 input = gets.chomp
-# receive choice as to which way to search opencongress
+
+puts "Please provide your 2-letter state code:"
+state_code = gets.chomp.upcase
+
 if input == "a"
-	puts "Please provide your 2-letter state code:"
-	state_code = gets.chomp.upcase
-
-	Senator.new(state_code)
-		
+	senators = Senator.new(state_code)
+	puts "The Senators from #{state_code} are:"
+	senators.get_senators
 else
-	puts "Please provide the name of a Senator:"
-	pol_name = gets.chomp.capitalize
+	puts "Please provide a district #:"
+	district = gets.chomp.to_i
 
-	PoliticianState.new(pol_name)
+	district_reps = DistrictReps.new(district, state_code)
+	puts "The US Representative from District #{district} of #{state_code} is:"
+	district_reps.get_district_reps
+	
 end
+
+
+
